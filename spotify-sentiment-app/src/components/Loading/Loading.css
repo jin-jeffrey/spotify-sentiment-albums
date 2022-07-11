@@ -1,0 +1,32 @@
+.basic {
+    content: '';
+    display: block;
+    height: 80px;
+    width: 80px;
+    -webkit-animation: spin .5s infinite linear;
+            animation: spin .5s infinite linear;
+    border: 6px white solid;
+    border-left-color: #1db954;
+    border-radius: 100%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.loading {
+    color: white;
+    text-align: center;
+    width: 100%;
+    margin-top: 12px;
+    font-weight: bold;
+    font-size: 20px;
+}
+
+@-webkit-keyframes spin {
+to {
+    -webkit-transform: rotate(360deg);
+            transform: rotate(360deg); } }
+
+@keyframes spin {
+to {
+    -webkit-transform: rotate(360deg);
+            transform: rotate(360deg); } }
