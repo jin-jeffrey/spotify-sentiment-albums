@@ -11,6 +11,7 @@ const Playlists = ({setLoaded}) => {
 	const [playlists, setPlaylists] = useState([]);
 	const [selectedPlaylist, setSelectedPlaylist] = useState({});
 	const [loading, setLoading] = useState(true);
+	const [userId, setUserId] = useState("");
 
 	// initialize firestore
 	const firebaseConfig = {
@@ -47,6 +48,15 @@ const Playlists = ({setLoaded}) => {
 
 	// retrieve playlists and songs
 	const getPlaylists = async (token) => {
+		// retrieve user id
+		const profileRes = await fetch('https://api.spotify.com/v1/me/', {
+			headers: {
+				'Authorization': 'Bearer ' + token
+			}
+		});
+		const profileData = await profileRes.json();
+		setUserId(profileData.id)
+		// retrieve playlists
 		const res = await fetch('https://api.spotify.com/v1/me/playlists', {
 			headers: {
 				'Authorization': 'Bearer ' + token
@@ -132,6 +142,24 @@ const Playlists = ({setLoaded}) => {
 			}).showToast();
 			console.log(playlists[playlist].name, playlists[playlist])
 		}
+	}
+
+	const createPlaylist = async (name, description, pub) => {
+		const new_data = {
+			"name": name,
+			"description": description,
+			"public": pub
+		}
+		const playlistRes = await fetch(`https://api.spotify.com/v1/users/${userId}/playlists` , {
+			method: 'POST',
+			headers: {
+				'Authorization': 'Bearer ' + window.sessionStorage.token,
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify(new_data)
+		});
+		const results = await playlistRes.json();
+		console.log(results);
 	}
 
 	const selectPlaylist = (playlist) => {

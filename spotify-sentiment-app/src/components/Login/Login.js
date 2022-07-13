@@ -24,7 +24,7 @@ const Login = ({setToken}) => {
             <div className="login">
                 <div className="title-text">Spotify Sentiment Albums</div>
                 <div className="description">Curate emotion based playlists</div>
-                <button className="spotify-auth" onClick={() => window.location.href=`${process.env.REACT_APP_AUTH_ENDPOINT}?client_id=${process.env.REACT_APP_CLIENT_ID}&redirect_uri=${process.env.REACT_APP_REDIRECT_URI}&response_type=${process.env.REACT_APP_RESPONSE_TYPE}&scope=`}>Login via Spotify</button>
+                <button className="spotify-auth" onClick={() => window.location.href=`${process.env.REACT_APP_AUTH_ENDPOINT}?client_id=${process.env.REACT_APP_CLIENT_ID}&redirect_uri=${process.env.REACT_APP_REDIRECT_URI}&response_type=${process.env.REACT_APP_RESPONSE_TYPE}&scope=${process.env.REACT_APP_SCOPE}`}>Login via Spotify</button>
             </div>
         </section>
 		</>
