@@ -4,14 +4,17 @@ import {initializeApp} from "firebase/app";
 import { doc, setDoc, getDoc, getFirestore} from "firebase/firestore";
 import Loading from "../Loading/Loading";
 import Toastify from "toastify-js";
-import "toastify-js/src/toastify.css"
-
+import Modal from 'react-modal';
+import Dropdown from 'react-bootstrap/Dropdown';
+import "toastify-js/src/toastify.css";
 
 const Playlists = ({setLoaded}) => {
 	const [playlists, setPlaylists] = useState([]);
 	const [selectedPlaylist, setSelectedPlaylist] = useState({});
 	const [loading, setLoading] = useState(true);
 	const [userId, setUserId] = useState("");
+	const [modalIsOpen, setModalIsOpen] = useState(false);
+	const [exportMood, setExportMood] = useState("");
 
 	// initialize firestore
 	const firebaseConfig = {
@@ -140,7 +143,8 @@ const Playlists = ({setLoaded}) => {
 				stopOnFocus: true,
 				className: "toast-notification"
 			}).showToast();
-			console.log(playlists[playlist].name, playlists[playlist])
+			// Enable export
+			playlists[playlist].export = true;
 		}
 	}
 
@@ -166,6 +170,16 @@ const Playlists = ({setLoaded}) => {
 		setSelectedPlaylist(playlist);
 	}
 
+	const openModal = (mood) => {
+		setModalIsOpen(true);
+		setExportMood(mood);
+	}
+
+	const closeModal = () => {
+		setModalIsOpen(false);
+		setExportMood("");
+	}
+
 	return (
 		<>
 		{
@@ -174,7 +188,7 @@ const Playlists = ({setLoaded}) => {
 					<Loading />
 				</div>
 			:
-				<div className="container">
+				<div className="app-container">
 					<div className="playlists">
 						{ playlists.map((playlist, index) => {
 							return <button className={selectedPlaylist.id===playlist.id ? "selected playlist" : "playlist"} onClick={() => selectPlaylist(playlist)} key={index}>{playlist.name}</button>
@@ -186,6 +200,16 @@ const Playlists = ({setLoaded}) => {
 								<div className="playlist-header">
 									<img className="album-image" alt="Playlist-Icon" src={selectedPlaylist.images[1]?.url}/>
 									<div className="album-title">{selectedPlaylist.name}</div>
+									<Dropdown>
+										<Dropdown.Toggle className={selectedPlaylist.export ? "" : "disabled"} variant="success">Generate Albums</Dropdown.Toggle>
+										<Dropdown.Menu>
+										<Dropdown.Item onClick={() => openModal("Happy")}>Generate Happy Albums</Dropdown.Item>
+										<Dropdown.Item onClick={() => openModal("Sad")}>Generate Sad Albums</Dropdown.Item>
+										<Dropdown.Item onClick={() => openModal("Angry")}>Generate Angry Albums</Dropdown.Item>
+										<Dropdown.Item onClick={() => openModal("Surprise")}>Generate Surprise Albums</Dropdown.Item>
+										<Dropdown.Item onClick={() => openModal("Fear")}>Generate Fear Albums</Dropdown.Item>
+										</Dropdown.Menu>
+									</Dropdown>
 								</div>
 								<div className="playlist-songs">
 									{selectedPlaylist.tracks.map((song, index) => {
@@ -195,6 +219,10 @@ const Playlists = ({setLoaded}) => {
 							</>
 						}
 					</div>
+					<Modal isOpen = {modalIsOpen}onRequestClose = {closeModal}>
+						<button onClick={closeModal}>Close</button>
+						<div>{exportMood}</div>
+					</Modal>
 				</div>
 			}
 		</>
