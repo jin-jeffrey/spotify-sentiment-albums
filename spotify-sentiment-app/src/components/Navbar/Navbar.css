@@ -2,3 +2,27 @@
     height: 5vh;
     background: #191414;
 }
+
+.btn-primary {
+    background-color: transparent !important;
+    border: none !important;
+}
+
+.dropdown-toggle::after {
+    content: none !important;
+}
+
+.profile-image {
+    border-radius: 100%;
+    border: 4px solid rgb(230, 221, 221)
+}
+
+.profile-image:hover {
+    border: 4px solid #1db954;
+    transform: translate(0, -5px);
+}
+
+.btn-primary:focus{
+    box-shadow: none !important;
+}
+

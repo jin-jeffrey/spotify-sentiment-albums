@@ -45,7 +45,7 @@ const Playlists = ({setLoaded}) => {
 		}
 	}, [playlists])
 
-	// retrieve playlists and songs
+	//retrieve playlists and songs
 	const getPlaylists = async (token) => {
 		const res = await fetch('https://api.spotify.com/v1/me/playlists', {
 			headers: {
@@ -78,7 +78,7 @@ const Playlists = ({setLoaded}) => {
 		setLoaded();
 	}
 
-	// get moods for each song in each playlist
+	//get moods for each song in each playlist
 	const getMoods = async () => {
 		for (let playlist in playlists) {
 			for (let track in playlists[playlist].tracks) {
@@ -146,7 +146,7 @@ const Playlists = ({setLoaded}) => {
 					<Loading />
 				</div>
 			:
-				<div className="container">
+				<div className="app-container">
 					<div className="playlists">
 						{ playlists.map((playlist, index) => {
 							return <button className={selectedPlaylist.id===playlist.id ? "selected playlist" : "playlist"} onClick={() => selectPlaylist(playlist)} key={index}>{playlist.name}</button>
