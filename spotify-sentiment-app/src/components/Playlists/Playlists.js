@@ -1,12 +1,22 @@
 import './Playlists.css';
-import {useEffect, useState} from "react";
-import {initializeApp} from "firebase/app";
-import { doc, setDoc, getDoc, getFirestore} from "firebase/firestore";
-import Loading from "../Loading/Loading";
-import Toastify from "toastify-js";
+import {useEffect, useState} from 'react';
+import {initializeApp} from 'firebase/app';
+import { doc, setDoc, getDoc, getFirestore} from 'firebase/firestore';
+import Loading from '../Loading/Loading';
+import Toastify from 'toastify-js';
 import Modal from 'react-modal';
 import Dropdown from 'react-bootstrap/Dropdown';
-import "toastify-js/src/toastify.css";
+import Slider from '@mui/material/Slider';
+import {Swiper, SwiperSlide} from 'swiper/react';
+import { Navigation, Pagination, Scrollbar, A11y } from 'swiper';
+import 'swiper/css';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
+import 'swiper/css/scrollbar';
+import 'toastify-js/src/toastify.css';
+
+// Initialize Modal
+Modal.setAppElement('#root')
 
 const Playlists = ({setLoaded}) => {
 	const [playlists, setPlaylists] = useState([]);
@@ -15,6 +25,9 @@ const Playlists = ({setLoaded}) => {
 	const [userId, setUserId] = useState("");
 	const [modalIsOpen, setModalIsOpen] = useState(false);
 	const [exportMood, setExportMood] = useState("");
+	const [albumName, setAlbumName] = useState("");
+	const [albumDescription, setAlbumDescription] = useState("");
+	const [percentageMood, setPercentageMood] = useState(0);
 
 	// initialize firestore
 	const firebaseConfig = {
@@ -178,6 +191,9 @@ const Playlists = ({setLoaded}) => {
 	const closeModal = () => {
 		setModalIsOpen(false);
 		setExportMood("");
+		setAlbumDescription("");
+		setAlbumName("");
+		setPercentageMood(0);
 	}
 
 	return (
@@ -203,11 +219,11 @@ const Playlists = ({setLoaded}) => {
 									<Dropdown>
 										<Dropdown.Toggle className={selectedPlaylist.export ? "" : "disabled"} variant="success">Generate Albums</Dropdown.Toggle>
 										<Dropdown.Menu>
-										<Dropdown.Item onClick={() => openModal("Happy")}>Generate Happy Albums</Dropdown.Item>
-										<Dropdown.Item onClick={() => openModal("Sad")}>Generate Sad Albums</Dropdown.Item>
-										<Dropdown.Item onClick={() => openModal("Angry")}>Generate Angry Albums</Dropdown.Item>
-										<Dropdown.Item onClick={() => openModal("Surprise")}>Generate Surprise Albums</Dropdown.Item>
-										<Dropdown.Item onClick={() => openModal("Fear")}>Generate Fear Albums</Dropdown.Item>
+											<Dropdown.Item onClick={() => openModal("Happy")}>Generate Happy Albums</Dropdown.Item>
+											<Dropdown.Item onClick={() => openModal("Sad")}>Generate Sad Albums</Dropdown.Item>
+											<Dropdown.Item onClick={() => openModal("Angry")}>Generate Angry Albums</Dropdown.Item>
+											<Dropdown.Item onClick={() => openModal("Surprise")}>Generate Surprise Albums</Dropdown.Item>
+											<Dropdown.Item onClick={() => openModal("Fear")}>Generate Fear Albums</Dropdown.Item>
 										</Dropdown.Menu>
 									</Dropdown>
 								</div>
@@ -219,9 +235,30 @@ const Playlists = ({setLoaded}) => {
 							</>
 						}
 					</div>
-					<Modal isOpen = {modalIsOpen}onRequestClose = {closeModal}>
-						<button onClick={closeModal}>Close</button>
-						<div>{exportMood}</div>
+					<Modal isOpen = {modalIsOpen} onRequestClose = {closeModal}>
+						{/* <button onClick={closeModal}>Close</button>
+						<Slider 
+							size="small"
+							defaultValue = {0}
+							valueLabelDisplay="auto"
+							min = {0}
+							max = {30}
+							onChange = {(e, val) => setPercentageMood(val)}
+						/> */}
+						<Swiper 
+							modules={[Navigation, Pagination, Scrollbar, A11y]}
+							spaceBetween={50}
+							slidesPerView={3}
+							navigation
+							pagination={{ clickable: true }}
+							scrollbar={{ draggable: true }}
+							onSwiper={(swiper) => console.log(swiper)}
+							onSlideChange={() => console.log('slide change')}
+						>
+							<SwiperSlide>slide</SwiperSlide>
+							<SwiperSlide>slide</SwiperSlide>
+							<SwiperSlide>slide</SwiperSlide>
+						</Swiper>
 					</Modal>
 				</div>
 			}
