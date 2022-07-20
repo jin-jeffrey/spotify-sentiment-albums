@@ -110,3 +110,24 @@
     margin-right: 30px;
     padding-top: 10%;
 }
+
+.carousel-root {
+    height: 100%;
+    width: 100%;
+    border-radius: 10px;
+    background-color: #1db954;
+}
+
+.carousel-slider {
+    height: 99%;
+    color: white;
+}
+
+.export-btn {
+    height: 35px;
+    margin-right: 0;
+}
+
+.carousel .control-dots .dot {
+    box-shadow: none !important;
+}

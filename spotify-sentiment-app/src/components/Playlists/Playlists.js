@@ -5,14 +5,9 @@ import { doc, setDoc, getDoc, getFirestore} from 'firebase/firestore';
 import Loading from '../Loading/Loading';
 import Toastify from 'toastify-js';
 import Modal from 'react-modal';
-import Dropdown from 'react-bootstrap/Dropdown';
-import Slider from '@mui/material/Slider';
-import {Swiper, SwiperSlide} from 'swiper/react';
-import { Navigation, Pagination, Scrollbar, A11y } from 'swiper';
-import 'swiper/css';
-import 'swiper/css/navigation';
-import 'swiper/css/pagination';
-import 'swiper/css/scrollbar';
+import Button from 'react-bootstrap/Button';
+import { Carousel } from 'react-responsive-carousel';
+import "react-responsive-carousel/lib/styles/carousel.min.css";
 import 'toastify-js/src/toastify.css';
 
 // Initialize Modal
@@ -24,7 +19,6 @@ const Playlists = ({setLoaded}) => {
 	const [loading, setLoading] = useState(true);
 	const [userId, setUserId] = useState("");
 	const [modalIsOpen, setModalIsOpen] = useState(false);
-	const [exportMood, setExportMood] = useState("");
 	const [albumName, setAlbumName] = useState("");
 	const [albumDescription, setAlbumDescription] = useState("");
 	const [percentageMood, setPercentageMood] = useState(0);
@@ -183,14 +177,12 @@ const Playlists = ({setLoaded}) => {
 		setSelectedPlaylist(playlist);
 	}
 
-	const openModal = (mood) => {
+	const openModal = () => {
 		setModalIsOpen(true);
-		setExportMood(mood);
 	}
 
 	const closeModal = () => {
 		setModalIsOpen(false);
-		setExportMood("");
 		setAlbumDescription("");
 		setAlbumName("");
 		setPercentageMood(0);
@@ -216,16 +208,7 @@ const Playlists = ({setLoaded}) => {
 								<div className="playlist-header">
 									<img className="album-image" alt="Playlist-Icon" src={selectedPlaylist.images[1]?.url}/>
 									<div className="album-title">{selectedPlaylist.name}</div>
-									<Dropdown>
-										<Dropdown.Toggle className={selectedPlaylist.export ? "" : "disabled"} variant="success">Generate Albums</Dropdown.Toggle>
-										<Dropdown.Menu>
-											<Dropdown.Item onClick={() => openModal("Happy")}>Generate Happy Albums</Dropdown.Item>
-											<Dropdown.Item onClick={() => openModal("Sad")}>Generate Sad Albums</Dropdown.Item>
-											<Dropdown.Item onClick={() => openModal("Angry")}>Generate Angry Albums</Dropdown.Item>
-											<Dropdown.Item onClick={() => openModal("Surprise")}>Generate Surprise Albums</Dropdown.Item>
-											<Dropdown.Item onClick={() => openModal("Fear")}>Generate Fear Albums</Dropdown.Item>
-										</Dropdown.Menu>
-									</Dropdown>
+									<Button className={selectedPlaylist.export ? "export-btn" : "disabled export-btn"} variant="success" onClick={openModal}>Generate Albums</Button>
 								</div>
 								<div className="playlist-songs">
 									{selectedPlaylist.tracks.map((song, index) => {
@@ -235,30 +218,40 @@ const Playlists = ({setLoaded}) => {
 							</>
 						}
 					</div>
-					<Modal isOpen = {modalIsOpen} onRequestClose = {closeModal}>
-						{/* <button onClick={closeModal}>Close</button>
-						<Slider 
-							size="small"
-							defaultValue = {0}
-							valueLabelDisplay="auto"
-							min = {0}
-							max = {30}
-							onChange = {(e, val) => setPercentageMood(val)}
-						/> */}
-						<Swiper 
-							modules={[Navigation, Pagination, Scrollbar, A11y]}
-							spaceBetween={50}
-							slidesPerView={3}
-							navigation
-							pagination={{ clickable: true }}
-							scrollbar={{ draggable: true }}
-							onSwiper={(swiper) => console.log(swiper)}
-							onSlideChange={() => console.log('slide change')}
+					<Modal 
+						isOpen = {modalIsOpen} 
+						onRequestClose = {closeModal}
+						style={{
+							overlay: {
+
+							},
+							content: {
+								border: 0,
+								background: "transparent",
+								height: "70vh",
+								width: "50vw",
+								marginLeft: "auto",
+								marginRight: "auto"
+							}
+						}}
+					>
+						<Carousel
+							infiniteLoop = {false}
+							showStatus = {false}
+							showArrows = {false}
+							showThumbs = {false}
 						>
-							<SwiperSlide>slide</SwiperSlide>
-							<SwiperSlide>slide</SwiperSlide>
-							<SwiperSlide>slide</SwiperSlide>
-						</Swiper>
+							<div>
+								Select Mood
+							</div>
+							<div>
+								<h1>Playlist Name</h1>
+								<p>Playlist Description</p>
+							</div>
+							<div>
+								new playlist contents
+							</div>
+						</Carousel>
 					</Modal>
 				</div>
 			}
