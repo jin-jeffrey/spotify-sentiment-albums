@@ -6,6 +6,8 @@ import Loading from '../Loading/Loading';
 import Toastify from 'toastify-js';
 import Modal from 'react-modal';
 import Button from 'react-bootstrap/Button';
+import Form from 'react-bootstrap/Form';
+import Col from 'react-bootstrap/Col';
 import { Carousel } from 'react-responsive-carousel';
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import 'toastify-js/src/toastify.css';
@@ -19,8 +21,10 @@ const Playlists = ({setLoaded}) => {
 	const [loading, setLoading] = useState(true);
 	const [userId, setUserId] = useState("");
 	const [modalIsOpen, setModalIsOpen] = useState(false);
+	const [selectedSlide, setSelectedSlide] = useState(0);
 	const [albumName, setAlbumName] = useState("");
 	const [albumDescription, setAlbumDescription] = useState("");
+	// add debounce to prevent constant updates when range is moved
 	const [percentageMood, setPercentageMood] = useState(0);
 
 	// initialize firestore
@@ -39,15 +43,15 @@ const Playlists = ({setLoaded}) => {
 	const db = getFirestore(app)
 
 	useEffect(() => {
-		getPlaylists(window.sessionStorage.token)
-		Toastify({
-			text: "Logged in",
-			duration: 3000,
-			gravity: "top",
-			position: "right",
-			stopOnFocus: true,
-			className: "toast-notification"
-		}).showToast();
+		// getPlaylists(window.sessionStorage.token)
+		// Toastify({
+		// 	text: "Logged in",
+		// 	duration: 3000,
+		// 	gravity: "top",
+		// 	position: "right",
+		// 	stopOnFocus: true,
+		// 	className: "toast-notification"
+		// }).showToast();
 	}, [])
 
 	useEffect(() => {
@@ -186,6 +190,11 @@ const Playlists = ({setLoaded}) => {
 		setAlbumDescription("");
 		setAlbumName("");
 		setPercentageMood(0);
+		setSelectedSlide(1);
+	}
+
+	const getMoodPlaylist = () => {
+		setSelectedSlide(1);
 	}
 
 	return (
@@ -231,7 +240,8 @@ const Playlists = ({setLoaded}) => {
 								height: "70vh",
 								width: "50vw",
 								marginLeft: "auto",
-								marginRight: "auto"
+								marginRight: "auto",
+								padding: "0px"
 							}
 						}}
 					>
@@ -240,16 +250,47 @@ const Playlists = ({setLoaded}) => {
 							showStatus = {false}
 							showArrows = {false}
 							showThumbs = {false}
+							swipeable = {false}
+							selectedItem={selectedSlide}
 						>
 							<div>
-								Select Mood
+								<Form>
+									<Form.Group className="mb-3">
+										<Form.Label>Album Name</Form.Label>
+										<Form.Control type="text" placeholder="Album Name" />
+									</Form.Group>
+									<Form.Group className="mb-3">
+										<Form.Label>Album Description</Form.Label>
+										<Form.Control as="textarea" rows={4} />
+									</Form.Group>
+									<Form.Group>
+										<Form.Select size="lg">
+											<option value="Happy">Happy</option>
+											<option value="Sad">Sad</option>
+											<option value="Surprised">Surprised</option>
+											<option value="Angry">Angry</option>
+											<option value="Fear">Fear</option>
+										</Form.Select>
+										<Form.Text className="text-muted">Select a mood to export songs based off of</Form.Text>
+									</Form.Group>
+									<Form.Group>
+										<Col xs="8">
+											<Form.Range value={percentageMood} onChange={e => setPercentageMood(e.target.value)} min={10} max={30} tooltip="auto"/>
+										</Col>
+										<Col xs="2">
+											<Form.Control value={percentageMood} />
+										</Col>
+										<Form.Text className="text-muted">Select a minimum mood percentage between (10, 30)</Form.Text>
+									</Form.Group>
+									<Button onClick={getMoodPlaylist}>
+										Next
+									</Button>
+								</Form>
 							</div>
 							<div>
-								<h1>Playlist Name</h1>
-								<p>Playlist Description</p>
-							</div>
-							<div>
-								new playlist contents
+								<div>songs</div>
+								<Button onClick={() => setSelectedSlide(0)}>Back</Button>
+								<Button>Export</Button>
 							</div>
 						</Carousel>
 					</Modal>

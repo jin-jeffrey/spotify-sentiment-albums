@@ -131,3 +131,7 @@
 .carousel .control-dots .dot {
     box-shadow: none !important;
 }
+
+label.form-label {
+    color: black;
+}
